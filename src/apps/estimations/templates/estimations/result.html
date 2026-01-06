@@ -20,16 +20,46 @@
         <div class="col-12 col-md-6">
           <div class="card card-soft p-3 h-100">
             <div class="text-uppercase small text-muted">Predykcja</div>
-            <div class="fs-4 fw-bold mt-2">{{ predicted }}</div>
+            <div class="fs-4 fw-bold mt-2">{{ predicted }} zł</div>
           </div>
         </div>
         <div class="col-12 col-md-6">
           <div class="card card-soft p-3 h-100">
             <div class="text-uppercase small text-muted">Twoja wycena</div>
-            <div class="fs-4 fw-bold mt-2">{{ user_price }}</div>
+            <div class="fs-4 fw-bold mt-2">{{ user_price }} zł</div>
           </div>
         </div>
       </div>
+
+      <!-- Karta z informacjami o modelu -->
+      <div class="row g-3 g-md-4 mt-4">
+        <div class="col-12">
+          <div class="card card-soft p-3">
+            <div class="text-uppercase small text-muted mb-2 text-center">Informacje o modelu</div>
+            <div class="row text-center">
+              <div class="col-6 col-md-3 mb-2">
+                <div class="text-muted small">Nazwa</div>
+                <div class="fw-bold small">{{ model_name }}</div>
+              </div>
+              <div class="col-6 col-md-3 mb-2">
+                <div class="text-muted small">Typ</div>
+                <div class="fw-bold small">{{ model_type }}</div>
+                
+              </div>
+              <div class="col-6 col-md-3 mb-2">
+                <div class="text-muted small">MAE</div>
+                <div class="fw-bold">{{ model_mae }}</div>
+              </div>
+              <div class="col-6 col-md-3 mb-2">
+                <div class="text-muted small">R²</div>
+                <div class="fw-bold">{{ model_r2 }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Koniec karty modelu -->
+
     </div>
   </div>
 </div>

@@ -2,6 +2,7 @@ import pandas as pd
 import joblib
 import numpy as np
 from pathlib import Path
+from datetime import datetime
 
 from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.compose import ColumnTransformer
@@ -10,15 +11,11 @@ from sklearn.pipeline import Pipeline
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_absolute_error, r2_score
 
-
 # =========================
 # KONFIGURACJA
 # =========================
 DATA_PATH = Path(__file__).resolve().parent.parent / "data" / "pos_estimations.csv"
 MODEL_DIR = Path(__file__).resolve().parent
-
-SEGMENT_THRESHOLD = 20  # granica dla modelu LARGE
-
 
 # =========================
 # 1. WCZYTANIE DANYCH
@@ -74,21 +71,12 @@ categorical_features = [
 
 df[categorical_features] = df[categorical_features].fillna("Unknown")
 
-
 # =========================
-# 4. PODZIAŁ DANYCH
+# 4. FUNKCJA TRENUJĄCA MODEL (bez log)
 # =========================
-df_large = df[df["naklad_szt"] > SEGMENT_THRESHOLD].copy()
-
-print("Rekordy GLOBAL:", len(df))
-print(f"Rekordy LARGE (>{SEGMENT_THRESHOLD}):", len(df_large))
-
-
-# =========================
-# 5. FUNKCJA TRENUJĄCA MODEL (log(y))
-# =========================
-def train_model(df_train, label):
-    y = np.log(df_train["cena"])  # LOG TARGET
+def train_model(df_train):
+    # Target wprost, bez log
+    y = df_train["cena"]
     X = df_train.drop(columns=["cena"])
 
     preprocessor = ColumnTransformer(
@@ -98,7 +86,8 @@ def train_model(df_train, label):
         ]
     )
 
-    model = RandomForestRegressor(
+    # Parametry modelu
+    rf_params = dict(
         n_estimators=600,
         max_depth=10,
         min_samples_leaf=3,
@@ -106,6 +95,8 @@ def train_model(df_train, label):
         random_state=42,
         n_jobs=-1
     )
+
+    model = RandomForestRegressor(**rf_params)
 
     pipeline = Pipeline(
         steps=[
@@ -120,14 +111,10 @@ def train_model(df_train, label):
 
     pipeline.fit(X_train, y_train)
 
-    y_pred_log = pipeline.predict(X_test)
-    y_pred = np.exp(y_pred_log)  # odwracamy log
+    y_pred = pipeline.predict(X_test)
 
-    y_test_exp = np.exp(y_test)
-
-    print(f"\n📊 WYNIKI – {label}")
-    print("MAE test:", round(mean_absolute_error(y_test_exp, y_pred), 2))
-    print("R2 test:", round(r2_score(y_test, y_pred_log), 3))
+    mae_test = mean_absolute_error(y_test, y_pred)
+    r2_test = r2_score(y_test, y_pred)
 
     mae_cv = -cross_val_score(
         pipeline,
@@ -138,28 +125,35 @@ def train_model(df_train, label):
         n_jobs=-1
     )
 
-    print("MAE CV mean (log target):", round(mae_cv.mean(), 2))
-    print("MAE CV std  (log target):", round(mae_cv.std(), 2))
+    # Dodajemy datę do nazwy modelu
+    model_name = f"MODEL_GLOBAL_{datetime.now().strftime('%Y%m%d')}"
 
-    return pipeline
+    print(f"\n📊 WYNIKI – {model_name}")
+    print("MAE test:", round(mae_test, 2))
+    print("R2 test:", round(r2_test, 3))
+    print("MAE CV mean:", round(mae_cv.mean(), 2))
+    print("MAE CV std:", round(mae_cv.std(), 2))
+
+    return {
+        "name": model_name,
+        "pipeline": pipeline,
+        "mae": round(mae_test, 2),
+        "r2": round(r2_test, 3),
+        "model_type": type(model).__name__,
+        "model_params": rf_params
+    }
 
 # =========================
-# 6. TRENING MODELI
+# 5. TRENING MODELU
 # =========================
-model_global = train_model(df, "GLOBAL")
-model_large = train_model(df_large, "LARGE")
-
+model_global = train_model(df)
 
 # =========================
-# 7. ZAPIS MODELI
+# 6. ZAPIS MODELU
 # =========================
 joblib.dump(
-    {
-        "threshold": SEGMENT_THRESHOLD,
-        "model_global": model_global,
-        "model_large": model_large,
-    },
-    MODEL_DIR / "hybrid_log_models.pkl"
+    {"model_global": model_global},
+    MODEL_DIR / "model_global.pkl"
 )
 
-print("\n✅ Modele zapisane: hybrid_log_models.pkl")
+print("\n✅ Model zapisany: model_global.pkl")

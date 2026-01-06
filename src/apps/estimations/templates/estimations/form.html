@@ -43,4 +43,28 @@
     </form>
   </div>
 </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const tworzywaInput = document.getElementById("id_tworz_m2") || document.getElementById("id_tworzywa_m2");
+    const rodzajSelect = document.getElementById("id_rodzaj_tworzywa");
+
+    if (!tworzywaInput || !rodzajSelect) return;
+
+    function updateRodzajTworzywa() {
+        if (parseFloat(tworzywaInput.value) > 0) {
+            rodzajSelect.disabled = false;
+        } else {
+            rodzajSelect.disabled = true;
+            rodzajSelect.value = ""; // brak wyboru
+        }
+    }
+
+    // sprawdzenie przy ładowaniu strony
+    updateRodzajTworzywa();
+
+    // obserwujemy zmiany w polu tworzywa_m2
+    tworzywaInput.addEventListener("input", updateRodzajTworzywa);
+});
+</script>
 {% endblock %}

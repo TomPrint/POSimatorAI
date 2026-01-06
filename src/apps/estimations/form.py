@@ -3,7 +3,7 @@ from .models import EstimationInput
 
 class EstimationForm(forms.ModelForm):
     user_price = forms.DecimalField(
-        required=False,
+        required=True,  # wymagane
         label="Twoja wycena",
         widget=forms.NumberInput(attrs={"class": "form-control"})
     )
@@ -41,3 +41,10 @@ class EstimationForm(forms.ModelForm):
             "rodzaj_tworzywa": forms.Select(attrs={"class": "form-control"}),
             "rodzaj_displaya": forms.Select(attrs={"class": "form-control"}),
         }
+
+    def clean_rodzaj_tworzywa(self):
+        tworzywa_m2 = self.cleaned_data.get("tworzywa_m2")
+        rodzaj = self.cleaned_data.get("rodzaj_tworzywa")
+        if tworzywa_m2 == 0:
+            return None  # brak tworzywa → brak kategorii
+        return rodzaj
