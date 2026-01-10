@@ -14,3 +14,12 @@ class User(AbstractUser):
 
     def is_admin(self):
         return self.role == self.Role.ADMIN
+    
+    def save(self, *args, **kwargs):
+    # jeśli użytkownik jest adminem, ustaw is_staff = True
+        if self.role == self.Role.ADMIN:
+            self.is_staff = True
+        else:
+            # np. manager nie jest staffem
+            self.is_staff = False
+        super().save(*args, **kwargs)

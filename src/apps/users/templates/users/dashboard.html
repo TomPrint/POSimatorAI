@@ -28,20 +28,23 @@
             {% if user.is_superuser %}Superuser{% elif user.is_staff %}Staff{% else %}User{% endif %}
           </td>
           <td>
-              <form method="post" action="{% url 'user-block' user.pk %}" style="display:inline;">
-              {% csrf_token %}
-              {% if user.is_active %}
-                <button type="submit" class="btn btn-warning btn-sm">Zablokuj</button>
-              {% else %}
-                <button type="submit" class="btn btn-success btn-sm">Odblokuj</button>
-              {% endif %}
-            </form>
+              {% if not user.is_superuser %}
+                  <!-- Blokuj / Odblokuj -->
+                  <form method="post" action="{% url 'user-block' user.pk %}" style="display:inline;">
+                    {% csrf_token %}
+                    {% if user.is_active %}
+                      <button type="submit" class="btn btn-warning btn-sm">Zablokuj</button>
+                    {% else %}
+                      <button type="submit" class="btn btn-success btn-sm">Odblokuj</button>
+                    {% endif %}
+                  </form>
 
-            <!-- Usuń użytkownika -->
-            <form method="post" action="{% url 'user-delete' user.pk %}" style="display:inline;" onsubmit="return confirm('Czy na pewno chcesz usunąć użytkownika {{ user.username }}?');">
-              {% csrf_token %}
-              <button type="submit" class="btn btn-danger btn-sm">Usuń</button>
-            </form>
+                  <!-- Usuń użytkownika -->
+                  <form method="post" action="{% url 'user-delete' user.pk %}" style="display:inline;" onsubmit="return confirm('Czy na pewno chcesz usunąć użytkownika {{ user.username }}?');">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger btn-sm">Usuń</button>
+                  </form>
+                {% endif %}
           </td>
         </tr>
       {% empty %}
