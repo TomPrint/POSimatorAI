@@ -90,8 +90,8 @@
     }
 
     .card-soft:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 22px 45px rgba(61, 61, 63, 0.16);
+      
+      box-shadow: 0 22px 45px rgba(61, 61, 63, 0.52);
     }
 
     .form-control,
@@ -139,16 +139,20 @@
 
     {% block auth_footer %}
       {% if user.is_authenticated %}
-        <div class="container pb-4 small">
-          Zalogowany: {{ user.username }}
-          <form method="post" action="{% url 'logout' %}" class="d-inline">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-link p-0">Wyloguj</button>
-          </form>
+        <div class="container pb-4 text-center">
+          <div class="mb-2">
+            <strong>Zalogowany:</strong> {{ user.username }}
+          </div>
+          <div class="d-flex justify-content-center gap-2 flex-wrap">
+            <form method="post" action="{% url 'logout' %}">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-danger">Wyloguj</button>
+            </form>
 
-          {% if user.is_superuser or user.is_staff %}
-            <a href="{% url 'user-create' %}" class="btn btn-sm btn-brand ms-3">Dodaj użytkownika</a>
-          {% endif %}
+            {% if user.is_superuser or user.is_staff %}
+              <a href="{% url 'dashboard' %}" class="btn btn-brand">Panel admina</a>
+            {% endif %}
+          </div>
         </div>
       {% endif %}
     {% endblock %}
