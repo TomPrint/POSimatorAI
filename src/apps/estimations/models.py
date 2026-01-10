@@ -15,17 +15,12 @@ RODZAJ_TWORZYWA_CHOICES = [
 ]
 
 RODZAJ_DISPLAYA_CHOICES = [
-    ('ekspozytor_pmma', 'Ekspozytor PMMA'),
     ('ekspozytor_tworzywowy', 'Ekspozytor tworzywowy'),
-    ('maly_naladowy', 'Mały display naladowy'),
+    ('naladowy', 'Display naladowy'),
     ('potykacz', 'Potykacz'),
-    ('regal_qpd', 'Regal QPD'),
-    ('regal_hpd', 'Regal HPD'),
-    ('regal_pd', 'Regal PD'),
-    ('paleciak_qpd', 'Paleciak QPD'),
-    ('paleciak_hpd', 'Paleciak HPD'),
-    ('paleciak_pd', 'Paleciak PD'),
-    ('owijka_pd', 'Owijka paletowa'),
+    ('regal', 'Regał QPD/HPD/PD'),
+    ('paleciak', 'Paleciak QPD/HPD/PD'),
+    ('owijka', 'Owijka paletowa'),
     ('kaseton', 'Kaseton'),
     ('wyspa', 'Wyspa'),
     ('druciak', 'Druciak'),
