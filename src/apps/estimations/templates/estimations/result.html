@@ -1,5 +1,186 @@
 {% extends "base.html" %}
 
+{% block extra_css %}
+<style>
+  .cute-robot-v1 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1.5rem 0 0.5rem;
+  }
+
+  .cute-robot-v1 * {
+    box-sizing: border-box;
+  }
+
+  .cute-robot-v1 .circle-bg {
+    background: #f6f5f3;
+    width: 220px;
+    height: 220px;
+    border-radius: 100%;
+    border: 6px solid #3d3d3f;
+    position: relative;
+  }
+
+  .cute-robot-v1 .circle-bg::after {
+    content: "";
+    position: absolute;
+    z-index: 2;
+    height: 100%;
+    width: 100%;
+    top: -2px;
+    left: 0;
+    border-radius: 100%;
+    border-bottom: 8px solid #3d3d3f;
+  }
+
+  .cute-robot-v1 .robot-head {
+    height: 170px;
+    width: 170px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: -18px;
+    border: 6px solid #3d3d3f;
+    border-radius: 80px / 56px;
+    background: #ffffff;
+    z-index: 4;
+  }
+
+  .cute-robot-v1 .robot-head::after {
+    content: "";
+    position: absolute;
+    top: -26px;
+    height: 24px;
+    width: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #3d3d3f;
+  }
+
+  .cute-robot-v1 .robot-head::before {
+    content: "";
+    position: absolute;
+    top: -52px;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 18px;
+    width: 18px;
+    background: #f6f5f3;
+    border: 6px solid #3d3d3f;
+    border-radius: 100%;
+  }
+
+  .cute-robot-v1 .robot-face {
+    height: 110px;
+    width: 140px;
+    background: #e1f4f0;
+    position: absolute;
+    top: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid #3d3d3f;
+    border-radius: 40px;
+    transition: all 200ms;
+  }
+
+  .cute-robot-v1 .eyes {
+    height: 18px;
+    width: 18px;
+    background: #3d3d3f;
+    border-radius: 100%;
+    position: absolute;
+    top: 36px;
+    animation: eye-bob 4s ease-in-out infinite;
+  }
+
+  .cute-robot-v1 .eyes.left {
+    left: 26px;
+  }
+
+  .cute-robot-v1 .eyes.right {
+    right: 26px;
+  }
+
+  .cute-robot-v1 .mouth {
+    height: 40px;
+    width: 40px;
+    border-radius: 100%;
+    border: 6px solid transparent;
+    border-bottom-color: #3d3d3f;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 46px;
+    overflow: hidden;
+    animation: smile-toggle 4s ease-in-out infinite;
+  }
+
+  .cute-robot-v1 .mouth::after {
+    content: "";
+    position: absolute;
+    height: 80%;
+    width: 80%;
+    bottom: -30%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #f9bbbb;
+    border-radius: 100%;
+    opacity: 0;
+    animation: tongue-toggle 4s ease-in-out infinite;
+  }
+
+  .cute-robot-v1 .robot-ear {
+    position: absolute;
+    height: 90px;
+    width: 90px;
+    border-radius: 100%;
+    background: #ffffff;
+    border: 6px solid #3d3d3f;
+    z-index: 3;
+    top: 30px;
+  }
+
+  .cute-robot-v1 .robot-ear.left {
+    left: -16px;
+  }
+
+  .cute-robot-v1 .robot-ear.right {
+    right: -16px;
+  }
+
+  .cute-robot-v1 .robot-body {
+    height: 45px;
+    width: 90px;
+    border: 6px solid #3d3d3f;
+    background: #ffffff;
+    position: absolute;
+    bottom: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 22px 22px 26px 26px;
+  }
+
+  @keyframes smile-toggle {
+    0%, 45% { border-bottom-color: #3d3d3f; }
+    55%, 100% {
+      border: 6px solid #3d3d3f;
+      clip-path: polygon(0% 30%, 100% 30%, 100% 100%, 0% 100%);
+    }
+  }
+
+  @keyframes tongue-toggle {
+    0%, 45% { opacity: 0; }
+    55%, 100% { opacity: 1; }
+  }
+
+  @keyframes eye-bob {
+    0%, 45% { transform: translateY(0); }
+    55%, 100% { transform: translateY(-4px); }
+  }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="row justify-content-center">
   <div class="col-12 col-lg-8">
@@ -63,4 +244,48 @@
     </div>
   </div>
 </div>
+
+<div class="modal fade" id="submitSuccessModal" tabindex="-1" aria-labelledby="submitSuccessModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 card-soft">
+      <div class="modal-header border-0 pb-0">
+        <h5 class="modal-title fw-bold" id="submitSuccessModalLabel">Estymacja zapisana</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Zamknij"></button>
+      </div>
+      <div class="modal-body text-center pt-0">
+        <div class="cute-robot-v1">
+          <div class="circle-bg">
+            <div class="robot-ear left"></div>
+            <div class="robot-head">
+              <div class="robot-face">
+                <div class="eyes left"></div>
+                <div class="eyes right"></div>
+                <div class="mouth"></div>
+              </div>
+            </div>
+            <div class="robot-ear right"></div>
+            <div class="robot-body"></div>
+          </div>
+        </div>
+        <p class="text-muted mobile-text-lg mb-0">Robot uczy się na Twoich danych.</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var modalEl = document.getElementById("submitSuccessModal");
+    if (!modalEl || !window.bootstrap) {
+      return;
+    }
+    var modal = new bootstrap.Modal(modalEl);
+    modal.show();
+    setTimeout(function () {
+      modal.hide();
+    }, 4000);
+  });
+</script>
 {% endblock %}
