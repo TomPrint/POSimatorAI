@@ -10,7 +10,7 @@
             <span class="brand-mark">P</span>
             POSimatorAI
           </div>
-          <h1 class="mt-3 fw-bold mobile-title">Wysłane estymacje</h1>
+          <h1 class="mt-3 fw-bold mobile-title">Zapisane Estymacje</h1>
           <p class="text-muted mobile-text-lg mb-0">Historia zapisanych wycen.</p>
         </div>
       </div>
@@ -30,9 +30,11 @@
                 <td>{{ submission.user.username }}</td>
                 <td>{{ submission.created_at|date:"Y-m-d H:i" }}</td>
                 <td class="text-end">
-                  <a class="btn btn-sm btn-brand" href="{% url 'submits-detail' submission.pk %}">Szczegóły</a>
-                  <a class="btn btn-sm btn-outline-secondary" href="{% url 'submits-export' submission.pk %}">CSV</a>
-                  <a class="btn btn-sm btn-outline-danger" href="{% url 'submits-delete' submission.pk %}">Usuń</a>
+                  <div class="d-grid d-md-inline-flex gap-2">
+                    <a class="btn btn-sm btn-brand" href="{% url 'submits-detail' submission.pk %}">Szczegóły</a>
+                    <a class="btn btn-sm btn-outline-secondary" href="{% url 'submits-export' submission.pk %}">CSV</a>
+                    <a class="btn btn-sm btn-outline-danger" href="{% url 'submits-delete' submission.pk %}">Usuń</a>
+                  </div>
                 </td>
               </tr>
             {% empty %}
