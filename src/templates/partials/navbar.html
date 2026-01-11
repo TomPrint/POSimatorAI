@@ -1,0 +1,32 @@
+<!-- Navbar start -->
+{% if user.is_authenticated %}
+  <nav class="navbar navbar-light bg-transparent py-2">
+    <div class="{% block nav_class %}container{% endblock %} d-flex align-items-center justify-content-between">
+      <a class="navbar-brand fw-bold" href="{% url 'estimations' %}">
+        POSimatorAI
+      </a>
+      <button class="btn btn-brand btn-sm" type="button" data-bs-toggle="offcanvas" data-bs-target="#appNav" aria-controls="appNav">
+        Menu
+      </button>
+    </div>
+  </nav>
+
+  <div class="offcanvas offcanvas-end" tabindex="-1" id="appNav" aria-labelledby="appNavLabel">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title" id="appNavLabel">Nawigacja</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Zamknij"></button>
+    </div>
+    <div class="offcanvas-body">
+      <div class="d-grid gap-2">
+        <a class="btn btn-outline-secondary" href="{% url 'estimations' %}">Twórz Estymacje</a>
+        <a class="btn btn-outline-secondary" href="{% url 'submits-list' %}">Zapisane Estymacje</a>
+        <a class="btn btn-outline-secondary" href="{% url 'dashboard' %}">Panel Admina</a>
+        <form method="post" action="{% url 'logout' %}">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-brand w-100">Wyloguj</button>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endif %}
+<!-- Navbar end -->

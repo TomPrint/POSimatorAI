@@ -4,6 +4,7 @@ from .form import EstimationForm
 from .models import EstimationInput
 from ml.predict import predict_price
 from django.views.generic import TemplateView
+from apps.submits.models import Submission
 from ml.predict import MODEL  # importujemy model z predict.py
 class EstimationView(LoginRequiredMixin, FormView):
     template_name = "estimations/form.html"
@@ -45,6 +46,13 @@ class EstimationView(LoginRequiredMixin, FormView):
             "r2": predicted_result["r2"],
             "type": predicted_result["model_type"],
         }
+
+        Submission.objects.create(
+            user=self.request.user,
+            input_data=input_data,
+            predicted_price=float(predicted_result["predicted"]),
+            user_price=float(user_price) if user_price not in (None, "", 0) else None,
+        )
 
         return super().form_valid(form)
 

@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-12 col-lg-10">
+    <div class="card card-soft p-4 p-md-5">
+      <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-4">
+        <div>
+          <div class="brand-logo">
+            <span class="brand-mark">P</span>
+            POSimatorAI
+          </div>
+          <h1 class="mt-3 fw-bold mobile-title">Szczegóły estymacji</h1>
+          <p class="text-muted mobile-text-lg mb-0">Użytkownik: {{ submission.user.username }}</p>
+        </div>
+        <div class="d-flex gap-2">
+          <a class="btn btn-brand btn-lg" href="{% url 'submits-export' submission.pk %}">Eksport CSV</a>
+          <a class="btn btn-outline-secondary btn-lg" href="{% url 'submits-list' %}">Wróć</a>
+        </div>
+      </div>
+
+      <div class="row g-3 g-md-4">
+        <div class="col-12 col-md-6">
+          <div class="card card-soft p-3 h-100">
+            <div class="text-uppercase small text-muted">Predykcja</div>
+            <div class="fs-4 fw-bold mt-2">{{ submission.predicted_price }}</div>
+          </div>
+        </div>
+        <div class="col-12 col-md-6">
+          <div class="card card-soft p-3 h-100">
+            <div class="text-uppercase small text-muted">Twoja wycena</div>
+            <div class="fs-4 fw-bold mt-2">{{ submission.user_price }}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-4">
+        <div class="row g-3 g-md-4">
+          <div class="col-12 col-md-6"><strong>Nakład szt:</strong> {{ submission.input_data.naklad_szt }}</div>
+          <div class="col-12 col-md-6"><strong>Objętość m3:</strong> {{ submission.input_data.objetosc_m3 }}</div>
+          <div class="col-12 col-md-6"><strong>Konstrukcja kg:</strong> {{ submission.input_data.konstrukcja_kg }}</div>
+          <div class="col-12 col-md-6"><strong>Sklejka m3:</strong> {{ submission.input_data.sklejka_m3 }}</div>
+          <div class="col-12 col-md-6"><strong>Drewno m3:</strong> {{ submission.input_data.drewno_m3 }}</div>
+          <div class="col-12 col-md-6"><strong>Płyta m2:</strong> {{ submission.input_data.plyta_m2 }}</div>
+          <div class="col-12 col-md-6"><strong>Druk m2:</strong> {{ submission.input_data.druk_m2 }}</div>
+          <div class="col-12 col-md-6"><strong>LED mb:</strong> {{ submission.input_data.led_mb }}</div>
+          <div class="col-12 col-md-6"><strong>Tworzywa m2:</strong> {{ submission.input_data.tworzywa_m2 }}</div>
+          <div class="col-12 col-md-6"><strong>Koszty pozostałe:</strong> {{ submission.input_data.koszty_pozostale }}</div>
+          <div class="col-12 col-md-6"><strong>Stopień skomplikowania:</strong> {{ submission.input_data.stopien_skomplikowania }}</div>
+          <div class="col-12 col-md-6"><strong>Rodzaj tworzywa:</strong> {{ submission.input_data.rodzaj_tworzywa }}</div>
+          <div class="col-12 col-md-6"><strong>Rodzaj displaya:</strong> {{ submission.input_data.rodzaj_displaya }}</div>
+          <div class="col-12 col-md-6"><strong>Data:</strong> {{ submission.created_at|date:"Y-m-d H:i" }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
