@@ -5,8 +5,11 @@
       <a class="navbar-brand fw-bold" href="{% url 'estimations' %}">
         POSimatorAI
       </a>
-      <button class="btn btn-brand btn-sm" type="button" data-bs-toggle="offcanvas" data-bs-target="#appNav" aria-controls="appNav">
-        Menu
+      <button class="btn btn-brand btn-sm menu-button" id="menuToggle" type="button" data-bs-toggle="offcanvas" data-bs-target="#appNav" aria-controls="appNav">
+        <span class="menu-robot" aria-hidden="true">
+          <span class="menu-robot-mouth"></span>
+        </span>
+        <span>Menu</span>
       </button>
     </div>
   </nav>
@@ -18,9 +21,9 @@
     </div>
     <div class="offcanvas-body">
       <div class="d-grid gap-2">
-        <a class="btn btn-outline-secondary" href="{% url 'estimations' %}">Twórz Estymacje</a>
-        <a class="btn btn-outline-secondary" href="{% url 'submits-list' %}">Zapisane Estymacje</a>
-        <a class="btn btn-outline-secondary" href="{% url 'dashboard' %}">Panel Admina</a>
+        <a class="btn btn-outline-secondary" href="{% url 'estimations' %}">Twórz estymacje</a>
+        <a class="btn btn-outline-secondary" href="{% url 'submits-list' %}">Wysłane estymacje</a>
+        <a class="btn btn-outline-secondary" href="{% url 'dashboard' %}">Panel admina</a>
         <form method="post" action="{% url 'logout' %}">
           {% csrf_token %}
           <button type="submit" class="btn btn-brand w-100">Wyloguj</button>
@@ -30,3 +33,27 @@
   </div>
 {% endif %}
 <!-- Navbar end -->
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var menuBtn = document.getElementById("menuToggle");
+    var offcanvasEl = document.getElementById("appNav");
+    if (!menuBtn || !offcanvasEl || !window.bootstrap) {
+      return;
+    }
+
+    menuBtn.addEventListener("click", function () {
+      menuBtn.classList.add("is-active");
+      setTimeout(function () {
+        menuBtn.classList.remove("is-active");
+      }, 700);
+    });
+
+    offcanvasEl.addEventListener("show.bs.offcanvas", function () {
+      menuBtn.classList.add("menu-open");
+    });
+    offcanvasEl.addEventListener("hidden.bs.offcanvas", function () {
+      menuBtn.classList.remove("menu-open");
+    });
+  });
+</script>
