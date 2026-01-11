@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'apps.estimations',
     'apps.users',
+    'apps.submits',
     'widget_tweaks',
 
 ]
