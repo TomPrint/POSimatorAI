@@ -152,6 +152,10 @@
       border: 2px solid var(--ink);
       border-top: none;
       border-radius: 0 0 8px 8px;
+      position: absolute;
+      left: 50%;
+      bottom: 5px;
+      transform: translateX(-50%);
     }
 
     .menu-button.is-active .menu-robot,
@@ -190,9 +194,18 @@
         height: 26px;
       }
 
+      .menu-robot::before,
+      .menu-robot::after {
+        top: 6px;
+        width: 4px;
+        height: 4px;
+      }
+
       .menu-robot-mouth {
         width: 10px;
         height: 5px;
+        border-width: 2px;
+        bottom: 4px;
       }
     }
   </style>
