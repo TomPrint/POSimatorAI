@@ -14,9 +14,6 @@
 - **User Data Contribution**: Users can add new records to help retrain and improve the model.
 - **Price Estimation**: Predicts the cost of advertising shelves based on various parameters.
 - **Data Handling**: Utilizes **pandas** for data management and preprocessing.
-
-## Installation
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/yourusername/PosimatorAI.git
+- **User Panel with Roles**: Provides a login system with user roles to manage access and permissions.
+  
+![PosimatorAI Login](PosimatorAI%20-%20login.jpg)
