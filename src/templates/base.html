@@ -69,16 +69,16 @@
     }
 
     .btn-brand {
-      background: var(--ink);
-      border-color: var(--ink);
-      color: #fff;
+      background: var(--mint);
+      border-color: var(--mint);
+      color: #0d2214;
     }
 
     .btn-brand:hover,
     .btn-brand:focus {
-      background: #2c2c2f;
-      border-color: #2c2c2f;
-      color: #fff;
+      background: #6fbe86;
+      border-color: #6fbe86;
+      color: #0d2214;
     }
 
     .card-soft {
@@ -107,6 +107,79 @@
       box-shadow: 0 0 0 0.25rem rgba(125, 206, 148, 0.25);
     }
 
+    .menu-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .menu-robot {
+      width: 30px;
+      height: 30px;
+      border-radius: 10px;
+      background: var(--cloud);
+      border: 2px solid var(--ink);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .menu-robot::before,
+    .menu-robot::after {
+      content: "";
+      position: absolute;
+      top: 7px;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--ink);
+      animation: robot-blink 4s infinite;
+    }
+
+    .menu-robot::before {
+      left: 7px;
+    }
+
+    .menu-robot::after {
+      right: 7px;
+    }
+
+    .menu-robot-mouth {
+      width: 12px;
+      height: 6px;
+      border: 2px solid var(--ink);
+      border-top: none;
+      border-radius: 0 0 8px 8px;
+      position: absolute;
+      left: 50%;
+      bottom: 5px;
+      transform: translateX(-50%);
+    }
+
+    .menu-button.is-active .menu-robot,
+    .menu-button.menu-open .menu-robot {
+      animation: robot-bounce 0.6s ease;
+    }
+
+    .menu-button.is-active .menu-robot-mouth,
+    .menu-button.menu-open .menu-robot-mouth {
+      border-color: var(--mint);
+    }
+
+    @keyframes robot-blink {
+      0%, 46%, 100% { transform: scaleY(1); }
+      48%, 52% { transform: scaleY(0.15); }
+    }
+
+    @keyframes robot-bounce {
+      0% { transform: translateY(0); }
+      40% { transform: translateY(-4px); }
+      70% { transform: translateY(1px); }
+      100% { transform: translateY(0); }
+    }
+
     @media (max-width: 576px) {
       .mobile-text-lg {
         font-size: 1.15rem;
@@ -115,6 +188,25 @@
       .mobile-title {
         font-size: 2rem;
       }
+
+      .menu-robot {
+        width: 26px;
+        height: 26px;
+      }
+
+      .menu-robot::before,
+      .menu-robot::after {
+        top: 6px;
+        width: 4px;
+        height: 4px;
+      }
+
+      .menu-robot-mouth {
+        width: 10px;
+        height: 5px;
+        border-width: 2px;
+        bottom: 4px;
+      }
     }
   </style>
 
@@ -122,7 +214,9 @@
 </head>
 <body class="{% block body_class %}bg-brand{% endblock %}">
   <div class="d-flex flex-column min-vh-100">
-    {% include "partials/navbar.html" %}
+    {% block navbar %}
+      {% include "partials/navbar.html" %}
+    {% endblock %}
 
     <main class="{% block main_class %}container{% endblock %} flex-grow-1 py-4 py-md-5">
       {% block content %}{% endblock %}
