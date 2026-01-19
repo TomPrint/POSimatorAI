@@ -178,6 +178,51 @@
     0%, 45% { transform: translateY(0); }
     55%, 100% { transform: translateY(-4px); }
   }
+
+  .verify-result {
+    white-space: pre-wrap;
+    max-height: 320px;
+    overflow-y: auto;
+    border: 1px solid #e5e5e5;
+    background: #ffffff;
+    padding: 0.75rem;
+    border-radius: 12px;
+  }
+
+  .verify-badges {
+    display: inline-flex;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  .verify-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 999px;
+    border: 1px solid #e5e5e5;
+    background: #f7f7f7;
+    font-size: 0.7rem;
+    letter-spacing: 0.02em;
+  }
+
+  .verify-dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.65rem;
+    color: #ffffff;
+    background: #1a73e8;
+  }
+
+  .verify-dot.gemini {
+    background: #0f9d58;
+  }
 </style>
 {% endblock %}
 
@@ -241,6 +286,39 @@
       </div>
       <!-- Koniec karty modelu -->
 
+      <div class="row g-3 g-md-4 mt-4">
+        <div class="col-12">
+          <div class="card card-soft p-3">
+            <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
+              <div>
+                <div class="text-uppercase small text-muted">Sprawdź ceny online z AI</div>
+                <div class="text-muted small">Użyj Gemini Google Search do prognozy ceny.</div>
+                <div class="verify-badges mt-2">
+                  <span class="verify-badge">
+                    <span class="verify-dot">G</span>
+                    Google Search
+                  </span>
+                  <span class="verify-badge">
+                    <span class="verify-dot gemini">G</span>
+                    Gemini
+                  </span>
+                </div>
+              </div>
+              <button
+                class="btn btn-outline-dark"
+                id="verifyPriceButton"
+                data-submission-id="{{ submission_id }}"
+                {% if not submission_id %}disabled{% endif %}
+              >
+                Weryfikacja Gemini AI
+              </button>
+            </div>
+            <div id="verifyPriceStatus" class="small text-muted mt-3 d-none"></div>
+            <div id="verifyPriceResult" class="verify-result mt-3 small"></div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
@@ -286,6 +364,69 @@
     setTimeout(function () {
       modal.hide();
     }, 4000);
+
+    var verifyButton = document.getElementById("verifyPriceButton");
+    var statusEl = document.getElementById("verifyPriceStatus");
+    var resultEl = document.getElementById("verifyPriceResult");
+    if (!verifyButton) {
+      return;
+    }
+
+    function getCookie(name) {
+      var value = "; " + document.cookie;
+      var parts = value.split("; " + name + "=");
+      if (parts.length === 2) {
+        return parts.pop().split(";").shift();
+      }
+      return "";
+    }
+
+    verifyButton.addEventListener("click", function () {
+      var submissionId = verifyButton.getAttribute("data-submission-id");
+      if (!submissionId) {
+        return;
+      }
+
+      statusEl.textContent = "Sprawdzam zasoby internetowe...zaczekaj chwilę.";
+      statusEl.classList.remove("d-none");
+      resultEl.textContent = "";
+      verifyButton.disabled = true;
+
+      fetch("{% url 'estimation-verify' %}", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          "X-CSRFToken": getCookie("csrftoken"),
+        },
+        body: "submission_id=" + encodeURIComponent(submissionId),
+      })
+        .then(function (response) {
+          return response.json().then(function (data) {
+            return { ok: response.ok, data: data };
+          });
+        })
+        .then(function (payload) {
+          if (!payload.ok) {
+            var details = "";
+            if (payload.data && payload.data.diagnostics) {
+              try {
+                details = " Details: " + JSON.stringify(payload.data.diagnostics);
+              } catch (e) {
+                details = " Details: [unavailable]";
+              }
+            }
+            throw new Error((payload.data.error || "Request failed.") + details);
+          }
+          resultEl.textContent = payload.data.text;
+        })
+        .catch(function (error) {
+          resultEl.textContent = "Błąd: " + error.message;
+        })
+        .finally(function () {
+          verifyButton.disabled = false;
+          statusEl.classList.add("d-none");
+        });
+    });
   });
 </script>
 {% endblock %}
